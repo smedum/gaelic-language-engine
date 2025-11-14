@@ -1,4 +1,6 @@
-toml[build]
+toml
+Copy
+[build]
   command = "npm ci && npm run build"
   publish = "dist"
 
