@@ -1,0 +1,15 @@
+# build output
+dist/
+
+# node deps
+node_modules/
+
+# local env files
+.env
+
+# audio assets (if you keep them outside repo)
+audio/
+
+# editor / OS files
+.vscode/
+.DS_Store
