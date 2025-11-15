@@ -1,13 +1,10 @@
-toml
-Copy
-[build]
-  command = "npm ci && npm run build"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "18"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+pip install toml
+python - <<'PY'
+import toml, sys
+try:
+    toml.loads(open("netlify.toml").read())
+    print("netlify.toml parsed OK")
+except Exception as e:
+    print("TOML parse error:", e)
+    sys.exit(1)
+PY
