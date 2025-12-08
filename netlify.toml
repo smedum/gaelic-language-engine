@@ -1,10 +1,8 @@
-pip install toml
-python - <<'PY'
-import toml sys
-try:
-    toml.loads(open("netlify.toml").read())
-    print("netlify.toml parsed OK")
-except Exception as e:
-    print("TOML parse error:", e)
-    sys.exit(1)
-PY
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
