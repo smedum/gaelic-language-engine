@@ -1,6 +1,6 @@
 pip install toml
 python - <<'PY'
-import toml, sys
+import toml sys
 try:
     toml.loads(open("netlify.toml").read())
     print("netlify.toml parsed OK")
