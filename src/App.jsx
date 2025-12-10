@@ -151,7 +151,7 @@ const GaelicSoundLibrary = () => {
       <audio ref={audioRef} />
       
       <header className="bg-gradient-to-r from-blue-600 to-green-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8 text-center">
           <h1 className="text-4xl font-bold mb-2">Leabharlann Fuaim Ghàidhlig</h1>
           <p className="text-xl opacity-90">Scottish Gaelic Audio Library</p>
           <p className="text-sm mt-4 italic opacity-75">Is fheàrr Gàidhlig bhriste na Gàidhlig sa chiste</p>
@@ -262,3 +262,5 @@ const GaelicSoundLibrary = () => {
 };
 
 export default GaelicSoundLibrary;
+
+    
