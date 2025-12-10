@@ -179,7 +179,7 @@ const GaelicSoundLibrary = () => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-8">
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8 rounded-r-lg">
           <h2 className="font-bold text-lg mb-2">🎯 How to Use This Library</h2>
           <ol className="list-decimal list-inside space-y-2 text-sm">
@@ -262,5 +262,3 @@ const GaelicSoundLibrary = () => {
 };
 
 export default GaelicSoundLibrary;
-
-    
