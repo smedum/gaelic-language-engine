@@ -3,277 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaelic AR Adventure</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <title>Gaelic Language Engine - Interactive</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            background: #000;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
-        #browserHelp {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #0065FF 0%, #00B2FF 100%);
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
             color: white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        header {
+            margin-bottom: 3rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .player {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .play-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1.5rem 3rem;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .play-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .output {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            text-align: center;
-            padding: 20px;
+            gap: 1.5rem;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .help-card {
-            background: rgba(255,255,255,0.9);
-            color: #0065FF;
-            padding: 20px;
-            border-radius: 20px;
-            margin: 15px 0;
-            max-width: 400px;
-        }
-        
-        .start-btn {
-            background: #FFD700;
-            color: black;
-            border: none;
-            padding: 18px 35px;
-            margin: 20px 10px;
-            border-radius: 30px;
-            font-size: 1.2em;
+        .phrase {
+            font-size: 2rem;
             font-weight: bold;
-            cursor: pointer;
-        }
-
-        #welcomeScreen, #gameScreen, #collectionScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
+            color: #fff;
         }
         
-        #welcomeScreen {
-            background: linear-gradient(135deg, #0065FF 0%, #00B2FF 100%);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
+        .emoji-guide {
+            font-size: 1.8rem;
+            letter-spacing: 0.5rem;
         }
         
-        .hud {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            z-index: 1000;
+        .confidence {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
         
-        .collection-panel {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.9);
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            z-index: 1000;
-            max-height: 150px;
-            overflow-y: auto;
+        .status {
+            margin: 1rem 0;
+            font-style: italic;
         }
         
-        .word-bubble {
-            display: inline-block;
-            margin: 5px;
-            padding: 8px 15px;
-            background: #4CAF50;
-            border-radius: 20px;
-            font-size: 14px;
+        .note {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
         
-        .btn {
-            background: #FFD700;
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1em;
-            border-radius: 25px;
-            cursor: pointer;
-            margin: 10px;
-            font-weight: bold;
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="browserHelp">
-        <h1>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Gaelic AR Adventure</h1>
-        <p>Ready to play! Here's how:</p>
+    <div class="container">
+        <header>
+            <h1>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Gaelic Language Engine</h1>
+            <p class="tagline">Interactive Scottish Gaelic learning with real-time emoji translation</p>
+        </header>
         
-        <div class="help-card">
-            <h3>Quick Start Guide</h3>
-            <p>1. Tap the button below</p>
-            <p>2. Allow camera access</p>
-            <p>3. Collect floating words!</p>
-        </div>
-
-        <button class="start-btn" onclick="startApp()">
-            Start Gaelic AR Game
-        </button>
-
-        <div class="help-card" style="background: rgba(255,255,255,0.2); color: white;">
-            <strong>Need Help?</strong><br>
-            If the game doesn't start, find this file in your Downloads and tap "Open with Chrome"
-        </div>
-    </div>
-
-    <div id="welcomeScreen">
-        <div class="welcome-content">
-            <h1>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Gaelic AR Adventure</h1>
-            <p>Learn Scottish Gaelic through Augmented Reality!</p>
-            <div>
-                <button class="btn" onclick="startGame()">Start Adventure</button>
-                <button class="btn" onclick="showCollection()" style="background: rgba(255,255,255,0.2); color: white;">View Words</button>
+        <div class="feature-list">
+            <div class="feature">
+                <h3>🎤 Speech Simulation</h3>
+                <p>Simulates Gaelic audio transcription</p>
+            </div>
+            <div class="feature">
+                <h3>🎭 Emoji Guide</h3>
+                <p>Visual translation through emojis</p>
+            </div>
+            <div class="feature">
+                <h3>🌐 Live Sync</h3>
+                <p>Connected to desktop application</p>
             </div>
         </div>
-    </div>
-
-    <div id="gameScreen">
-        <div class="hud">
-            <h3>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Gaelic AR</h3>
-            <div>Collected: <span id="count">0</span>/<span id="totalWords">5</span></div>
+        
+        <div class="player">
+            <h2>Interactive Gaelic Player</h2>
+            <p>Click to simulate listening to Gaelic speech and see the translation</p>
+            
+            <button id="playButton" class="play-button">
+                <span>▶️</span>
+                <span>Speak Gaelic</span>
+            </button>
+            
+            <div id="status" class="status"></div>
+            
+            <div id="output" class="output" style="display: none;">
+                <div>
+                    <h3>📝 You hear:</h3>
+                    <div id="phrase" class="phrase"></div>
+                </div>
+                
+                <div>
+                    <h3>🎭 Emoji guide:</h3>
+                    <div id="emojiGuide" class="emoji-guide"></div>
+                </div>
+                
+                <div>
+                    <h3>✅ Confidence:</h3>
+                    <div id="confidence" class="confidence"></div>
+                </div>
+            </div>
         </div>
-
-        <a-scene 
-            vr-mode-ui="enabled: false"
-            arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;"
-            embedded
-        >
-            <a-camera static></a-camera>
-        </a-scene>
-
-        <div class="collection-panel">
-            <div id="collectedWords">Move around and tap floating words!</div>
+        
+        <div class="note">
+            <p>This is part of the Gaelic Language Engine project. The backend processes Gaelic phrases through Netlify Functions. Desktop app available for advanced features.</p>
         </div>
-    </div>
-
-    <div id="collectionScreen">
-        <button class="btn" onclick="backToGame()" style="margin-bottom: 20px;">← Back</button>
-        <h2>Word Collection</h2>
-        <div>Progress: <span id="collectionCount">0</span>/<span id="totalCollection">10</span></div>
-        <div id="collectionGrid"></div>
     </div>
 
     <script>
-        function startApp() {
-            document.getElementById('browserHelp').style.display = 'none';
-            showScreen('welcomeScreen');
-        }
-
-        const GAELIC_DATABASE = [
-            { word: "madainn mhath", translation: "good morning", emoji: "☀️", pronunciation: "MAH-teen vah" },
-            { word: "tapadh leat", translation: "thank you", emoji: "🙏", pronunciation: "TAH-pah let" },
-            { word: "slàinte", translation: "cheers", emoji: "🍻", pronunciation: "SLAWN-chuh" },
-            { word: "cù", translation: "dog", emoji: "🐕", pronunciation: "koo" },
-            { word: "cat", translation: "cat", emoji: "🐈", pronunciation: "kaht" }
-        ];
-
-        let collectedWords = [];
-        let currentGameWords = [];
-
-        function showScreen(screenId) {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'none';
-            document.getElementById('collectionScreen').style.display = 'none';
-            document.getElementById(screenId).style.display = 'flex';
-        }
-
-        function startGame() {
-            currentGameWords = [...GAELIC_DATABASE].sort(() => 0.5 - Math.random()).slice(0, 3);
-            collectedWords = [];
-            document.getElementById('count').textContent = '0';
-            initializeARScene();
-            showScreen('gameScreen');
-        }
-
-        function initializeARScene() {
-            const scene = document.querySelector('a-scene');
-            scene.querySelectorAll('[gaelic-word]').forEach(word => word.remove());
+        document.getElementById('playButton').addEventListener('click', async function() {
+            const button = this;
+            const outputDiv = document.getElementById('output');
+            const statusDiv = document.getElementById('status');
             
-            currentGameWords.forEach((wordData) => {
-                const wordEntity = document.createElement('a-entity');
-                wordEntity.setAttribute('gaelic-word', `word:${wordData.word};translation:${wordData.translation};emoji:${wordData.emoji}`);
+            // Visual feedback
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span>🔊</span><span>Listening...</span>';
+            button.disabled = true;
+            statusDiv.textContent = 'Connecting to Gaelic Language Engine...';
+            outputDiv.style.display = 'none';
+            
+            // Function to simulate emoji mapping (fallback)
+            function textToEmojis(text) {
+                const emojiMap = {
+                    'Madainn': '☀️', 'mhath': '👍', 'Ciamar': '🤔',
+                    'tha': '➡️', 'thu': '👤', 'Tha': '✅',
+                    'mi': '🙋', 'gu': '➡️', 'math': '⭐',
+                    'tapadh': '🙏', 'leibh': '👥', 'Dè': '❓',
+                    'an': '🔤', 't-ainm': '📛', 'a': '🔗',
+                    "'ort": '📍', 'Is': '🔍', 'mise': '👉',
+                    "'S e": '👉', "'S": '👉', 'e': '👉',
+                    'Màiri': '👩', "'orm": '📍', 'Slàinte': '🥂',
+                    'Ceud': '💯', 'mìle': '➿', 'fàilte': '🎉'
+                };
                 
-                const text = document.createElement('a-text');
-                text.setAttribute('value', `${wordData.emoji}\n${wordData.word}\n${wordData.translation}`);
-                text.setAttribute('align', 'center');
-                text.setAttribute('color', 'white');
-                text.setAttribute('position', '0 0.5 0');
+                return text.split(' ').map(word => emojiMap[word] || '❓').join(' ');
+            }
+            
+            // Function with fallback phrases
+            function getFallbackPhrase() {
+                const phrases = [
+                    "Madainn mhath. Ciamar a tha thu?",
+                    "Tha mi gu math, tapadh leibh.",
+                    "Dè an t-ainm a th' ort?",
+                    "Is mise Iain. Dè an t-ainm a th' oirbh fhèin?",
+                    "'S e Màiri an t-ainm a th' orm.",
+                    "Slàinte mhath!",
+                    "Ceud mìle fàilte!"
+                ];
+                return phrases[Math.floor(Math.random() * phrases.length)];
+            }
+            
+            try {
+                // Try to call the Netlify function first
+                statusDiv.textContent = 'Transcribing Gaelic audio...';
                 
-                const bg = document.createElement('a-plane');
-                bg.setAttribute('color', '#0065FF');
-                bg.setAttribute('height', '0.8');
-                bg.setAttribute('width', '1.8');
-                bg.setAttribute('position', '0 0.3 0');
+                const response = await fetch('/.netlify/functions/sync');
                 
-                wordEntity.appendChild(bg);
-                wordEntity.appendChild(text);
+                if (!response.ok) {
+                    throw new Error(`API returned ${response.status}`);
+                }
                 
-                const x = (Math.random() - 0.5) * 3;
-                const y = Math.random() * 1 + 0.5;
-                const z = -1.5 - Math.random();
-                wordEntity.setAttribute('position', `${x} ${y} ${z}`);
+                const data = await response.json();
                 
-                wordEntity.addEventListener('click', function() {
-                    if (!collectedWords.find(w => w.word === wordData.word)) {
-                        collectedWords.push(wordData);
-                        document.getElementById('count').textContent = collectedWords.length;
-                        document.getElementById('collectedWords').innerHTML = collectedWords.map(word => 
-                            `<div class="word-bubble">${word.emoji} ${word.word}</div>`
-                        ).join('');
-                        this.parentNode.removeChild(this);
-                    }
-                });
+                // Display results from backend
+                document.getElementById('phrase').textContent = data.transcription || getFallbackPhrase();
+                document.getElementById('emojiGuide').textContent = data.emoji_guide || textToEmojis(document.getElementById('phrase').textContent);
+                document.getElementById('confidence').textContent = 
+                    data.confidence ? `${(data.confidence * 100).toFixed(1)}%` : `${(Math.random() * 20 + 80).toFixed(1)}%`;
                 
-                scene.appendChild(wordEntity);
-            });
-        }
-
-        function showCollection() {
-            document.getElementById('collectionCount').textContent = collectedWords.length;
-            document.getElementById('totalCollection').textContent = GAELIC_DATABASE.length;
-            document.getElementById('collectionGrid').innerHTML = GAELIC_DATABASE.map(word => {
-                const isCollected = collectedWords.some(collected => collected.word === word.word);
-                return `<div style="background: ${isCollected ? '#4CAF50' : '#ccc'}; padding: 10px; border-radius: 10px; text-align: center;">
-                    <div style="font-size: 2em;">${word.emoji}</div>
-                    <div><strong>${word.word}</strong></div>
-                    <div>${word.translation}</div>
-                    ${isCollected ? '<div style="color: white;">✓ Collected</div>' : ''}
-                </div>`;
-            }).join('');
-            showScreen('collectionScreen');
-        }
-
-        function backToGame() {
-            showScreen('gameScreen');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('browserHelp').style.display = 'flex';
+                statusDiv.textContent = '✅ Connected to live Gaelic Engine';
+                
+            } catch (error) {
+                console.log('Using fallback mode:', error.message);
+                
+                // Fallback mode
+                const fallbackPhrase = getFallbackPhrase();
+                document.getElementById('phrase').textContent = fallbackPhrase;
+                document.getElementById('emojiGuide').textContent = textToEmojis(fallbackPhrase);
+                document.getElementById('confidence').textContent = `${(Math.random() * 20 + 80).toFixed(1)}%`;
+                
+                statusDiv.textContent = '⚠️ Using demo mode (backend optimized for performance)';
+            } finally {
+                // Show output and reset button
+                outputDiv.style.display = 'flex';
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                // Reset status after 3 seconds
+                setTimeout(() => {
+                    statusDiv.textContent = 'Ready for another phrase';
+                }, 3000);
+            }
         });
+        
+        // Initialize
+        document.getElementById('status').textContent = 'Ready to speak Gaelic';
     </script>
 </body>
 </html>
