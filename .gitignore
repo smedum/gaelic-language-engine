@@ -12,3 +12,6 @@ audio/
 .DS_Store
 npm-debug.log*
 yarn-error.log*
+venv/
+__pycache__/
+*.pyc
